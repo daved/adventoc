@@ -10,6 +10,7 @@ import (
 func main() {
 	f, err := os.Open("input")
 	trip(err)
+	defer f.Close() //nolint
 
 	var a int
 	m := make(map[int]struct{})
