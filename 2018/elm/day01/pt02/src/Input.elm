@@ -1,6 +1,7 @@
 module Input exposing (data)
 
 
+data : String
 data =
     """
 -6
