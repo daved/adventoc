@@ -22,11 +22,11 @@ func main() {
 
 	for sc.Scan() {
 		c := makeClaim(sc.Text())
-		fab.applyClaim(c)
+		fab.apply(c)
 	}
 	trip(sc.Err())
 
-	fmt.Println(fab.overClaimed())
+	fmt.Println(fab.over())
 }
 
 type claim struct {
@@ -79,7 +79,7 @@ func makeFabric(x, y int) fabric {
 	return f
 }
 
-func (f fabric) applyClaim(c claim) {
+func (f fabric) apply(c claim) {
 	for x := c.x; x < len(f) && x < c.x+c.w; x++ {
 		for y := c.y; y < len(f[x]) && y < c.y+c.h; y++ {
 			f[x][y]++
@@ -87,7 +87,7 @@ func (f fabric) applyClaim(c claim) {
 	}
 }
 
-func (f fabric) overClaimed() int {
+func (f fabric) over() int {
 	var a int
 
 	for i := range f {
