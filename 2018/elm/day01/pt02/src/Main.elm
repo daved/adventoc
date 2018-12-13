@@ -1,5 +1,6 @@
 module Main exposing (result)
 
+import Array exposing (Array)
 import Input exposing (data)
 
 
@@ -13,9 +14,26 @@ ints =
     List.filterMap String.toInt lines
 
 
-headInt : List Int -> Int
-headInt list =
-    case List.head list of
+type alias Accumulation =
+    { total : Int
+    , finds : List Int
+    , index : Int
+    , adnds : Array Int
+    }
+
+
+initial : Accumulation
+initial =
+    { total = 0
+    , finds = []
+    , index = 0
+    , adnds = Array.fromList ints
+    }
+
+
+indAddend : Int -> Array Int -> Int
+indAddend index array =
+    case Array.get index array of
         Just n ->
             n
 
@@ -23,78 +41,37 @@ headInt list =
             0
 
 
-tailInts : List Int -> List Int
-tailInts list =
-    case List.tail list of
-        Just l ->
-            l
+nextIndex : Int -> Array a -> Int
+nextIndex index array =
+    if index + 1 >= Array.length array then
+        0
 
-        Nothing ->
-            []
-
-
-type alias Accumulation =
-    { total : Int
-    , finds : List Int
-    , found : Bool
-    , rmndr : List Int
-    }
-
-
-baseAccumulation : Accumulation
-baseAccumulation =
-    { total = 0
-    , finds = []
-    , found = False
-    , rmndr = ints
-    }
-
-
-accumulateByTail : List Int -> Accumulation -> Accumulation
-accumulateByTail tail curr =
-    case List.isEmpty tail of
-        True ->
-            curr
-
-        False ->
-            accumulate curr
+    else
+        index + 1
 
 
 accumulate : Accumulation -> Accumulation
 accumulate curr =
     let
         total =
-            curr.total + headInt curr.rmndr
+            curr.total + indAddend curr.index curr.adnds
 
-        tail =
-            tailInts curr.rmndr
+        next =
+            nextIndex curr.index curr.adnds
     in
     case List.member total curr.finds of
         True ->
-            { curr | total = total, found = True, rmndr = tail }
+            { curr | total = total, index = next }
 
         False ->
-            accumulateByTail tail
+            accumulate
                 { curr
                     | total = total
                     , finds = total :: curr.finds
-                    , rmndr = tail
+                    , index = next
                 }
 
 
-accumulation : Accumulation -> Accumulation
-accumulation init =
-    let
-        acc =
-            accumulate init
-    in
-    case acc.found of
-        True ->
-            acc
-
-        False ->
-            accumulation { acc | rmndr = ints }
-
-
+result : Int
 result =
-    (accumulation baseAccumulation).total
+    (accumulate initial).total
