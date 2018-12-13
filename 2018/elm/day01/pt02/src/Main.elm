@@ -2,6 +2,7 @@ module Main exposing (result)
 
 import Array exposing (Array)
 import Input exposing (data)
+import Set exposing (Set)
 
 
 lines : List String
@@ -16,7 +17,7 @@ ints =
 
 type alias Accumulation =
     { total : Int
-    , finds : List Int
+    , finds : Set Int
     , index : Int
     , adnds : Array Int
     }
@@ -25,14 +26,14 @@ type alias Accumulation =
 initial : Accumulation
 initial =
     { total = 0
-    , finds = []
+    , finds = Set.empty
     , index = 0
     , adnds = Array.fromList ints
     }
 
 
-indAddend : Int -> Array Int -> Int
-indAddend index array =
+intByIndex : Int -> Array Int -> Int
+intByIndex index array =
     case Array.get index array of
         Just n ->
             n
@@ -54,12 +55,12 @@ accumulate : Accumulation -> Accumulation
 accumulate curr =
     let
         total =
-            curr.total + indAddend curr.index curr.adnds
+            curr.total + intByIndex curr.index curr.adnds
 
         next =
             nextIndex curr.index curr.adnds
     in
-    case List.member total curr.finds of
+    case Set.member total curr.finds of
         True ->
             { curr | total = total, index = next }
 
@@ -67,7 +68,7 @@ accumulate curr =
             accumulate
                 { curr
                     | total = total
-                    , finds = total :: curr.finds
+                    , finds = Set.insert total curr.finds
                     , index = next
                 }
 
