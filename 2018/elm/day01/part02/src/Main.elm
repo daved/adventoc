@@ -5,16 +5,6 @@ import Input exposing (data)
 import Set exposing (Set)
 
 
-lines : List String
-lines =
-    String.split "\n" data
-
-
-ints : List Int
-ints =
-    List.filterMap String.toInt lines
-
-
 type alias Accumulation =
     { total : Int
     , finds : Set Int
@@ -23,12 +13,15 @@ type alias Accumulation =
     }
 
 
-initial : Accumulation
-initial =
+neatAccumulation : Accumulation
+neatAccumulation =
     { total = 0
     , finds = Set.empty
     , index = 0
-    , adnds = Array.fromList ints
+    , adnds =
+        String.split "\n" data
+            |> List.filterMap String.toInt
+            |> Array.fromList
     }
 
 
@@ -75,4 +68,4 @@ accumulate curr =
 
 result : Int
 result =
-    (accumulate initial).total
+    (accumulate neatAccumulation).total
