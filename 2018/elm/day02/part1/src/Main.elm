@@ -3,6 +3,7 @@ module Main exposing (result)
 import Dict
 import Dict.Extra as Dict
 import Input exposing (data)
+import List.Extra as List
 
 
 type alias DubsTripsTally =
@@ -18,47 +19,30 @@ neatDubsTripsTally =
     }
 
 
-countOfFrequencies : List ( Char, Int ) -> Int -> Int
-countOfFrequencies charFreqs frequency =
-    List.foldl
-        (\charFreq count ->
-            let
-                ( char, freq ) =
-                    charFreq
-            in
-            if freq == frequency then
-                count + 1
+oneOrNone : Bool -> Int
+oneOrNone bool =
+    case bool of
+        True ->
+            1
 
-            else
-                count
-        )
-        0
-        charFreqs
-
-
-oneOrNone : Int -> Int
-oneOrNone val =
-    if val > 0 then
-        1
-
-    else
-        0
+        False ->
+            0
 
 
 dubsTripsCombiner : String -> DubsTripsTally -> DubsTripsTally
 dubsTripsCombiner string tally =
     let
-        countOfFrequenciesOf =
-            countOfFrequencies
-                (string
-                    |> String.toList
-                    |> Dict.frequencies
-                    |> Dict.toList
-                )
+        uniqCounts =
+            string
+                |> String.toList
+                |> Dict.frequencies
+                |> Dict.toList
+                |> List.map (\( _, b ) -> b)
+                |> List.unique
     in
     { tally
-        | dubs = tally.dubs + (oneOrNone <| countOfFrequenciesOf 2)
-        , trps = tally.trps + (oneOrNone <| countOfFrequenciesOf 3)
+        | dubs = tally.dubs + (oneOrNone <| List.member 2 uniqCounts)
+        , trps = tally.trps + (oneOrNone <| List.member 3 uniqCounts)
     }
 
 
