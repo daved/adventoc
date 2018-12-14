@@ -19,7 +19,7 @@ neatAccumulation =
     , finds = Set.empty
     , index = 0
     , adnds =
-        String.split "\n" data
+        data
             |> List.filterMap String.toInt
             |> Array.fromList
     }
