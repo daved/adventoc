@@ -1,9 +1,10 @@
 module Input exposing (data)
 
 
-data : String
+data : List String
 data =
-    """
+    String.lines
+        """
 -6
 -1
 -18

@@ -5,6 +5,6 @@ import Input exposing (data)
 
 result : Int
 result =
-    String.split "\n" data
+    data
         |> List.filterMap String.toInt
         |> List.sum
