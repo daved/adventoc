@@ -3,8 +3,7 @@ module Input exposing (data)
 
 data : List String
 data =
-    String.lines
-        """
+    """
 -6
 -1
 -18
@@ -1022,3 +1021,5 @@ data =
 -11
 -77534
 """
+        |> String.lines
+        |> List.filter (not << String.isEmpty)

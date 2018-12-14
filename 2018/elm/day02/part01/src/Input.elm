@@ -3,8 +3,7 @@ module Input exposing (data)
 
 data : List String
 data =
-    String.lines
-        """
+    """
 jplenqtlagxhivmwmscfukzodp
 jbrehqtlagxhivmeyscfuvzodp
 jbreaqtlagxzivmwysofukzodp
@@ -256,3 +255,5 @@ jbrlnqtlagxhiimwescfukzodp
 jbrenqtlagwoivmwyscfukhodp
 jbrenqtlagnhivmwyscfuszovp
 """
+        |> String.lines
+        |> List.filter (not << String.isEmpty)
