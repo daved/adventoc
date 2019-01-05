@@ -33,9 +33,9 @@ func process(s string) string {
 		}
 
 		bs = append(bs[:i], bs[i+2:]...)
-		i--
-		if i > 0 {
-			i -= 2
+		i -= 2
+		if i < 0 {
+			i = -1
 		}
 	}
 
